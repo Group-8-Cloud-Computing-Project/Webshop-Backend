@@ -22,7 +22,6 @@ The application follows a **Three-Tier Architecture**:
    - A relational or NoSQL database for storing structured data such as products, orders, and inventory.
    - A BLOB storage service for unstructured data like product images.
 
----
 
 ## Features
 ### Frontend:
