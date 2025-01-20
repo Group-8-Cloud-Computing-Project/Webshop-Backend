@@ -1,4 +1,4 @@
-# Bekend Development Branch
+# Backend Development Branch
 
 ## Overview
 This repository contains the backend development code for the **Three-Tier Webshop Demo Application** as part of the Cloud Computing project for WiSe2024. The project demonstrates a scalable and high-availability architecture using modern cloud services and technologies.
@@ -49,3 +49,51 @@ The chosen CSP is determined by group-specific guidelines. Services include:
 - **Load Balancers**: Ensuring high availability and scalability.
 
 ---
+
+## ⚙️ Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Group-8-Cloud-Computing-Project/Webshop-Backend.git
+
+cd repository
+```
+### 2. Start the Development Server
+```bash
+python manage.py runserver
+```
+The server will be available at http://127.0.0.1:8000.
+
+## 🧪 Running Tests
+```bash
+python manage.py test
+```
+
+## 📝 Useful Commands
+- Create a Superuser (Admin):
+```bash
+python manage.py createsuperuser
+```
+- Generate a Database Migration File:
+```bash
+python manage.py makemigrations
+```
+- Collect Static Files (for deployment):
+```bash
+python manage.py collectstatic
+```
+- Create and Activate a Virtual Environment
+    1. Linux/macOS:
+    ```bash
+    python3 -m venv venv 
+    source venv/bin/activate
+    ```
+    2. Windows:
+    ```bash
+    python -m venv venv
+    venv\Scripts\activate
+    ```
+- Apply Database Migrations
+```bash
+python manage.py migrate
+```
