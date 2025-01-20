@@ -8,8 +8,6 @@ The demo focuses on:
 - A robust **Middleware** with REST API capabilities.
 - A reliable **Storage Backend** for structured (relational/NoSQL) and unstructured (BLOB) data.
 
----
-
 ## Architecture
 The application follows a **Three-Tier Architecture**:
 1. **Presentation Tier (Frontend)**:  
@@ -38,7 +36,6 @@ The application follows a **Three-Tier Architecture**:
 - Tables for product, order, and inventory management.
 - BLOB storage for handling large unstructured data.
 
----
 
 ## Cloud Service Provider (CSP)
 The chosen CSP is determined by group-specific guidelines. Services include:
@@ -47,7 +44,6 @@ The chosen CSP is determined by group-specific guidelines. Services include:
 - **Storage Solutions**: For BLOBs and backups.
 - **Load Balancers**: Ensuring high availability and scalability.
 
----
 
 ## ⚙️ Installation
 
