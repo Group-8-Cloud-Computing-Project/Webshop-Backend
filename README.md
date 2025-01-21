@@ -97,6 +97,10 @@ python manage.py createsuperuser
 ```bash
 python manage.py makemigrations
 ```
+- Apply Database Migrations
+```bash
+python manage.py migrate
+```
 - Collect Static Files (for deployment):
 ```bash
 python manage.py collectstatic
@@ -112,7 +116,3 @@ python manage.py collectstatic
     python -m venv venv
     venv\Scripts\activate
     ```
-- Apply Database Migrations
-```bash
-python manage.py migrate
-```
