@@ -44,6 +44,30 @@ The chosen CSP is determined by group-specific guidelines. Services include:
 - **Storage Solutions**: For BLOBs and backups.
 - **Load Balancers**: Ensuring high availability and scalability.
 
+## Project Structure
+The following is an overview of the project's structure:
+
+```plaintext
+Backend/
+├── api/            # The actual Python package for the project.
+│   ├── __init__.py     # Marks the directory as a Python package.
+│   ├── asgi.py         # Entry point for the ASGI-compatible web servers to serve your project.
+│   ├── settings.py     # Project settings/configuration file.
+│   ├── urls.py         # URL routing for the project.
+│   └── wsgi.py         # Entry point for WSGI-compatible web servers to serve your project.
+├── webshop/     # Django app directory for the Webshop functionality.
+│   ├── migrations/     # Database migrations for the app.
+│   ├── __init__.py     # Marks the directory as a Python package.
+│   ├── admin.py        # Configuration for the Django admin interface.
+│   ├── apps.py         # App-specific configuration file.
+│   ├── models.py       # Defines the data models (database structure) for the app.
+│   ├── serializers.py  # Serialization of data
+│   ├── tests.py        # Test cases for the app.
+│   └── views.py        # Handles requests and responses for the app.
+├── .gitignore          # Files that are excluded from Git tracking.
+├── README.md           # This documentation.
+└── manage.py           # Main Django management script (used for running commands like runserver, migrate, etc.).
+```
 
 ## ⚙️ Installation
 
