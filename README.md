@@ -69,7 +69,7 @@ Backend/
 └── manage.py           # Main Django management script (used for running commands like runserver, migrate, etc.).
 ```
 
-## ⚙️ Installation
+## Installation
 
 ### 1. Clone the Repository
 ```bash
@@ -77,7 +77,30 @@ git clone https://github.com/Group-8-Cloud-Computing-Project/Webshop-Backend.git
 
 cd repository
 ```
-### 2. Start the Development Server
+### 2. Dependencies
+
+1. **Python 3.8+**: Django requires Python 3.8 or later.
+Check with:
+```bash
+python --version
+```
+2. **Pip**: Python’s package manager (comes pre-installed with Python).
+Check with:
+```bash
+pip --version
+```
+3. **Virtualenv** (recommended): Creates isolated environments to avoid dependency conflicts.
+Install (if not already installed):
+```bash
+pip install virtualenv
+```
+
+4. **The core packages for Django and REST API development:**
+```bash
+pip install django djangorestframework
+```
+
+### 3. Start the Development Server
 ```bash
 python manage.py runserver
 ```
