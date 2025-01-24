@@ -1,6 +1,6 @@
-# Backend Development Branch
+# 🌐 Backend Development Branch
 
-## Overview
+## 📝 Overview
 This repository contains the backend development code for the **Three-Tier Webshop Demo Application** as part of the Cloud Computing project for WiSe2024. The project demonstrates a scalable and high-availability architecture using modern cloud services and technologies.
 
 The demo focuses on:
@@ -8,7 +8,7 @@ The demo focuses on:
 - A robust **Middleware** with REST API capabilities.
 - A reliable **Storage Backend** for structured (relational/NoSQL) and unstructured (BLOB) data.
 
-## Architecture
+## 🏗️ Architecture
 The application follows a **Three-Tier Architecture**:
 1. **Presentation Tier (Frontend)**:  
    A dynamic user interface implemented using a modern JavaScript framework (e.g., React). It interacts with the backend via REST APIs to display products, manage shopping carts, and handle checkouts.
@@ -21,7 +21,7 @@ The application follows a **Three-Tier Architecture**:
    - A BLOB storage service for unstructured data like product images.
 
 
-## Features
+## ✨ Features
 ### Frontend:
 - Product catalog with images, descriptions, and prices.
 - Search and filter functionality.
@@ -37,14 +37,14 @@ The application follows a **Three-Tier Architecture**:
 - BLOB storage for handling large unstructured data.
 
 
-## Cloud Service Provider (CSP)
+## ☁️ Cloud Service Provider (CSP)
 The chosen CSP is determined by group-specific guidelines. Services include:
 - **Compute Instances**: Hosting frontend and backend components.
 - **Database Solutions**: Relational or NoSQL databases.
 - **Storage Solutions**: For BLOBs and backups.
 - **Load Balancers**: Ensuring high availability and scalability.
 
-## Project Structure
+## 🗂️ Project Structure
 The following is an overview of the project's structure:
 
 ```plaintext
@@ -69,7 +69,7 @@ Backend/
 └── manage.py           # Main Django management script (used for running commands like runserver, migrate, etc.).
 ```
 
-## Installation
+## ⚙️ Installation
 
 ### 1. Clone the Repository
 ```bash
