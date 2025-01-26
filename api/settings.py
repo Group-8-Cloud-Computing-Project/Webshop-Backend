@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -107,6 +108,19 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Email Settings
+# https://docs.djangoproject.com/en/5.1/topics/email/
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # For local development
+    DEFAULT_FROM_EMAIL = "no-reply@webshop.com"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"  # For production
+    DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@webshop.com")
+    EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.example.com")
+    EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -117,3 +131,4 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+

@@ -52,3 +52,24 @@ class Inventory(models.Model):
         String representation for the model.
         """
         return f"{self.product_name} - Quantity: {self.quantity}"
+
+class EmailNotification(models.Model):
+    """
+    Model to store email notification logs.
+    """
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=50,
+        choices=[
+            ('PENDING', 'Pending'),
+            ('SENT', 'Sent'),
+            ('FAILED', 'Failed'),
+        ],
+        default='PENDING',
+    )
+
+    def __str__(self):
+        return f"Email to {self.recipient} - {self.status} at {self.sent_at}"

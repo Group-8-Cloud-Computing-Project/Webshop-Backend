@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Order
 from .models import Inventory
+from .models import EmailNotification
 
 class OrderTestCase(TestCase):
     def setUp(self):
@@ -39,3 +40,32 @@ class InventoryTestCase(TestCase):
 
         # Check when the quantity is below the low stock threshold
         self.assertTrue(item.is_low_stock(), "Item should be flagged as low stock.")
+
+class EmailNotificationTestCase(TestCase):
+    def test_email_sent_successfully(self):
+        notification = EmailNotification.objects.create(
+            recipient='test@example.com',
+            subject='Test Email',
+            message='This is a test email.',
+        )
+        self.assertEqual(notification.status, 'PENDING')
+
+        # Simulate sending email
+        notification.status = 'SENT'
+        notification.save()
+
+        self.assertEqual(notification.status, 'SENT')
+
+    def test_email_failed(self):
+        notification = EmailNotification.objects.create(
+            recipient='invalid-email',
+            subject='Test Email',
+            message='This is a test email.',
+        )
+        self.assertEqual(notification.status, 'PENDING')
+
+        # Simulate failure
+        notification.status = 'FAILED'
+        notification.save()
+
+        self.assertEqual(notification.status, 'FAILED')
