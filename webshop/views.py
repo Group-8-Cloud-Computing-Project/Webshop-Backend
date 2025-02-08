@@ -1,17 +1,19 @@
+import uuid
 from rest_framework import viewsets, status
-from .serializers import ProductSerializer, PaymentSerializer
+from rest_framework.views import APIView
+from .serializers import ProductSerializer
 from .models import Product
 from .serializers import OrderSerializer
 from .models import Order
 import random
 from rest_framework.response import Response
-from .serializers import PaymentSerializer
-from .models import Payment
 from .serializers import InventorySerializer
 from .models import Inventory
 from django.core.mail import send_mail
 from .serializers import EmailNotificationSerializer
 from .models import EmailNotification
+from .serializers import MockPaymentSerializer
+from .models import MockPayment
 
 def send_order_confirmation(order):
     """
@@ -64,10 +66,16 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """
-        Send email confirmation after order creation.
+        Send email confirmation after order confirmation.
         """
         order = serializer.save()
         send_order_confirmation(order)
+
+        MockPayment.objects.create(
+            order=order,
+            amount=order.total_price
+        )
+        print(f"MockPayment with status 'pending' created for Order {order.id}.")
 
     def perform_update(self, serializer):
         """
@@ -104,46 +112,38 @@ class EmailNotificationViewSet(viewsets.ModelViewSet):
             email.status = 'FAILED'
         email.save()
 
+class MockPaymentViewSet(viewsets.ModelViewSet):
+    # API Endpoint for mock payment
+    queryset = MockPayment.objects.all()
+    serializer_class = MockPaymentSerializer
 
+class MockPaymentWebhookView(APIView):
+    def post(self, request, *args, **kwargs):
+        payment_id = request.data.get("payment_id")
+        status_update = request.data.get("status", "pending")
 
-class PaymentViewSet(viewsets.ViewSet):
-    """
-        Simulated payment processing
-    """
+        if not payment_id:
+            return Response({"error": "Missing payment_id"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def initiate_payment(self, request):
-        """
-            Simulates a payment transaction
-        """
-        data = request.data
-        amount = data.get('amount')
-        order_id = data.get('order_id')
-        user_id = data.get('user_id')
+        if status_update not in ["completed", "failed", "pending"]:
+            return Response({"error": "Invalid status"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Simulate payment (successful or failed)
-        status_choice = random.choice(['success', 'failed'])
-
-        # Create a Payment object (Mock)
-        payment = Payment(
-            order_id=order_id,
-            user_id=user_id,
-            amount=amount,
-            status=status_choice
-        )
-
-        # Use the serializer
-        serializer = PaymentSerializer(payment)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def verify_payment(self, request, pk=None):
-        """
-            Checks the status of a simulated payment
-        """
         try:
-            payment = Payment.objects.get(pk=pk)
-            serializer = PaymentSerializer(payment)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Payment.DoesNotExist:
-            return Response(
-                {"error": "Payment not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            payment = MockPayment.objects.get(payment_id=payment_id)
+        except MockPayment.DoesNotExist:
+            return Response({"error": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update payment status
+        payment.status = status_update
+        payment.save()
+
+        # Falls die Zahlung erfolgreich war, ändere den Order-Status
+        if payment.status == "completed":
+            if not payment.order:
+                return Response({"error": "Order not associated with this payment"}, status=status.HTTP_400_BAD_REQUEST)
+            payment.order.status = "COMPLETED"
+            payment.order.save()
+            send_order_confirmation(payment.order)
+            print(f"Payment {payment.payment_id} successful, order completed.")
+
+        return Response({"message": f"Payment status updated: {payment.status}"}, status=status.HTTP_200_OK)

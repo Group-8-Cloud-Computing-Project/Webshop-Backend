@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Product
 from .models import Order
-from .models import Payment
+from .models import MockPayment
 from .models import Inventory
 from .models import EmailNotification
 
@@ -15,9 +15,6 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
 
-class PaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
 class InventorySerializer(serializers.ModelSerializer):
     """
     Serializer for Inventory model
@@ -38,3 +35,8 @@ class EmailNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailNotification
         fields = '__all__'
+
+class MockPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MockPayment
+        fields = "__all__"

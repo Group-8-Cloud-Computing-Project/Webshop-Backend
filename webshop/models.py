@@ -30,24 +30,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.customer_name} ({self.status})"
 
-class Payment(models.Model):
-    TRANSACTION_STATUS = [
-        ('PENDING', 'Pending'),
-        ('SUCCESS', 'Success'),
-        ('FAILED', 'Failed'),
-    ]
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    order_id = models.UUIDField()
-    user_id = models.UUIDField()
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=10, choices=TRANSACTION_STATUS, default='PENDING')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Payment {self.id} - {self.status}"
-
 class Inventory(models.Model):
     """
     Model to represent inventory items.
@@ -91,3 +73,26 @@ class EmailNotification(models.Model):
 
     def __str__(self):
         return f"Email to {self.recipient} - {self.status} at {self.sent_at}"
+
+class MockPayment(models.Model):
+
+    PAYMENT_PROVIDERS = [
+        ("stripe", "Stripe"),
+        ("paypal", "PayPal"),
+    ]
+
+    PAYMENT_STATUS = [
+        ("pending", "Pending"),
+        ("completed", "Completed"),
+        ("failed", "Failed"),
+    ]
+    payment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="payments")
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=10, default="usd")
+    provider = models.CharField(max_length=10, choices=PAYMENT_PROVIDERS, default="stripe")
+    status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.payment_id} - {self.status}"
