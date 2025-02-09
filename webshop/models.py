@@ -82,16 +82,16 @@ class MockPayment(models.Model):
     ]
 
     PAYMENT_STATUS = [
-        ("pending", "Pending"),
-        ("completed", "Completed"),
-        ("failed", "Failed"),
+        ("PENDING", "Pending"),
+        ("COMPLETED", "Completed"),
+        ("FAILED", "Failed"),
     ]
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="payments")
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10, default="usd")
     provider = models.CharField(max_length=10, choices=PAYMENT_PROVIDERS, default="stripe")
-    status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default="pending")
+    status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default="PENDING")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
