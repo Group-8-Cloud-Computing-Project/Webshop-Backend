@@ -25,7 +25,9 @@ SECRET_KEY = "django-insecure-5$=@vnpq1^!w@8w(v$h%la*gzy^6j7dko%aq@ls#qu=mw&zlx5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'webshop-gue6dkh8a5c3e6g6.canadacentral-01.azurewebsites.net'
+]
 
 # Application definition
 
@@ -131,8 +133,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://webshop-gue6dkh8a5c3e6g6.canadacentral-01.azurewebsites.net",
-    "https://webshop-gue6dkh8a5c3e6g6.canadacentral-01.azurewebsites.net",
 ]
 
 MEDIA_URL = '/images/'
