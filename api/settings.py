@@ -131,6 +131,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "webshop-gue6dkh8a5c3e6g6.canadacentral-01.azurewebsites.net",
 ]
 
 MEDIA_URL = '/images/'
