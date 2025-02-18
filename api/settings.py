@@ -24,8 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-5$=@vnpq1^!w@8w(v$h%la*gzy^6j7dko%aq@ls#qu=mw&zlx5"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", False);
 
 ALLOWED_HOSTS = [
     'webshop-gue6dkh8a5c3e6g6.canadacentral-01.azurewebsites.net'
@@ -89,7 +88,7 @@ WSGI_APPLICATION = "api.wsgi.application"
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgres://user:password@localhost/dbname')
+        default=os.environ.get('DATABASE_URL', 'postgres://ggaxacafpc:OzOYJUlP$mc$zuAP@webshop-server.postgres.database.azure.com/webshop-database?sslmode=require')
     )
 }
 
@@ -134,6 +133,8 @@ else:
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -143,6 +144,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
-
-MEDIA_URL = '/images/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
