@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .serializers import ProductSerializer
-from .models import Product
+from .serializers import ProductSerializer, CategorySerializer
+from .models import Product, Category
 from .serializers import OrderSerializer
 from .models import Order
 from .serializers import InventorySerializer
@@ -53,6 +53,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     # API Endpoint for Product
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
