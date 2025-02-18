@@ -78,4 +78,9 @@ jobs:
         with:
           app-name: 'webshop'
           slot-name: 'Production'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run collectstatic
+        run: python manage.py collectstatic
           
