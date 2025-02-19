@@ -88,7 +88,7 @@ WSGI_APPLICATION = "api.wsgi.application"
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgres://ggaxacafpc:OzOYJUlP$mc$zuAP@webshop-server.postgres.database.azure.com/webshop-database?sslmode=require')
+        default=os.environ.get('DATABASE_URL', 'postgres://ggaxacafpc:OzOYJUlP$mc$zuAP@mywebshop.writer.postgres.database.azure.com@5432/webshop-database?sslmode=require')
     )
 }
 
@@ -143,4 +143,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://kind-mushroom-0a3e7be1e.4.azurestaticapps.net",
 ]
