@@ -1,11 +1,15 @@
 from rest_framework import serializers
-from .models import Product
+from .models import Product, Category
 from .models import Order
 from .models import MockPayment
 from .models import Inventory
 from .models import EmailNotification
 
 class ProductSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),  # Needed for write operations
+        slug_field='name'
+    )
     class Meta:
         model = Product
         fields = '__all__'
@@ -34,6 +38,11 @@ class InventorySerializer(serializers.ModelSerializer):
 class EmailNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailNotification
+        fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = '__all__'
 
 class MockPaymentSerializer(serializers.ModelSerializer):

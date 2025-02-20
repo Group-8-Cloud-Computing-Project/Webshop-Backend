@@ -1,3 +1,6 @@
+from rest_framework import viewsets
+from .serializers import ProductSerializer, CategorySerializer
+from .models import Product, Category
 from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
@@ -96,6 +99,7 @@ def send_low_stock_email(self, product_name, quantity):
         email.status = 'FAILED'
     email.save()
 class ProductViewSet(viewsets.ModelViewSet):
+    # API Endpoint for Product
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -133,6 +137,10 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         instance.delete()
         print(f"Product {instance.name} deleted.")
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
