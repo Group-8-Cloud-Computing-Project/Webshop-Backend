@@ -21,7 +21,7 @@ class Order(models.Model):
 
     customer_name = models.CharField(max_length=100)
     customer_email = models.EmailField()
-    products = models.JSONField()
+    products = models.JSONField(default=list)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,9 +34,8 @@ class Inventory(models.Model):
     """
     Model to represent inventory items.
     """
-    product_name = models.CharField(max_length=255)
-    product_description = models.TextField(blank=True, null=True)
-    quantity = models.PositiveIntegerField(default=0)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="inventory")
+    quantity = models.PositiveIntegerField(default=10)
     low_stock_threshold = models.PositiveIntegerField(default=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -51,7 +50,7 @@ class Inventory(models.Model):
         """
         String representation for the model.
         """
-        return f"{self.product_name} - Quantity: {self.quantity}"
+        return f"{self.product.name} - Quantity: {self.quantity}"
 
 class EmailNotification(models.Model):
     """
