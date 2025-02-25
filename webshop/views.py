@@ -75,7 +75,7 @@ def send_shipping_notification(order):
         email.status = "FAILED"
     email.save()
 
-def send_low_stock_email(self, product_name, quantity):
+def send_low_stock_email(product_name, quantity):
     """
     Sends a notification to the admin when a product's stock is low.
     """
@@ -99,44 +99,9 @@ def send_low_stock_email(self, product_name, quantity):
         email.status = 'FAILED'
     email.save()
 class ProductViewSet(viewsets.ModelViewSet):
-    # API Endpoint for Product
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    def perform_create(self, serializer):
-        """
-        Creates a product and automatically creates an associated inventory object.
-        """
-        product = serializer.save()
-
-        # If no inventory exists, create one
-        inventory, created = Inventory.objects.get_or_create(product=product, defaults={"quantity": 10})
-        if created:
-            print(f"Inventory created for {product.name} with default quantity 10.")
-        else:
-            print(f"Inventory for {product.name} already exists.")
-
-    def perform_update(self, serializer):
-        """
-        Updates the product and ensures that the associated inventory object exists.
-        """
-        product = serializer.save()
-
-        # If Inventory is missing, create it
-        inventory, created = Inventory.objects.get_or_create(product=product)
-
-        if created:
-            print(f"Inventory created for {product.name} subsequently.")
-
-    def perform_destroy(self, instance):
-        """
-        Deletes the product and also removes the associated inventory object.
-        """
-        Inventory.objects.filter(product=instance).delete()
-        print(f"Inventory for {instance.name} deleted.")
-
-        instance.delete()
-        print(f"Product {instance.name} deleted.")
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -145,31 +110,28 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-    def perform_create(self, serializer):
-        """
-        Create a MockPayment object after order confirmation.
-        """
-        order = serializer.save()
-
-        # Create a MockPayment
-        MockPayment.objects.create(
-            order=order,
-            amount=order.total_price
-        )
-        print(f"MockPayment with status 'PENDING' created for Order {order.id}.")
-
     def perform_update(self, serializer):
         """
         Send email notifications when status to SHIPPED changes.
         """
         order = serializer.save()
-        if order.status == "SHIPPED":
+        if order.status == "COMPLETED":
+            send_order_confirmation(order)
+        elif order.status == "SHIPPED":
             send_shipping_notification(order)
 
 class InventoryViewSet(viewsets.ModelViewSet):
     # API Endpoint for Inventory
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+
+    def perform_update(self, serializer):
+        """
+        Send email notifications when status to SHIPPED changes.
+        """
+        inventory = serializer.save()
+        if inventory.is_low_stock():
+            send_low_stock_email(inventory.product.name, inventory.quantity)
 
 class EmailNotificationViewSet(viewsets.ModelViewSet):
 
@@ -208,27 +170,6 @@ class MockPaymentWebhookView(APIView):
 
                     payment.order.status = "COMPLETED"
                     payment.order.save()
-
-                    products = payment.order.products
-                    if isinstance(products, dict):
-                        products = [products]
-                    if not isinstance(products, list):
-                        return Response({"error": "Products data must be a list or a valid dictionary."},
-                                        status=status.HTTP_400_BAD_REQUEST)
-                    # Update inventory
-                    for product_data in products:
-                        product_name = product_data["name"]
-                        quantity = int(product_data["quantity"])
-
-                        inventory_item = Inventory.objects.get(product__name=product_name)
-                        inventory_item.quantity -= quantity
-                        inventory_item.save()
-                        print(f"Inventory updated for {product_name}, new quantity: {inventory_item.quantity}")
-
-                        if inventory_item.is_low_stock():
-                            send_low_stock_email(self, product_name, inventory_item.quantity)
-
-                    send_order_confirmation(payment.order)
                     print(f"Payment {payment.payment_id} successful, order completed.")
 
                 elif payment.status == "FAILED":
