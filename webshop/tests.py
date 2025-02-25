@@ -86,6 +86,7 @@ class PaymentProcessingTestCase(TestCase):
         self.payment = MockPayment.objects.create(
             order=self.order,
             amount=self.order.total_price,
+            currency="USD",
             provider="stripe",
             status="PENDING"
         )
