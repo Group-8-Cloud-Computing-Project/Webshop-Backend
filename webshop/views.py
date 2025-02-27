@@ -17,6 +17,38 @@ from .models import EmailNotification
 from .serializers import MockPaymentSerializer
 from .models import MockPayment
 
+
+def send_order_acknowledgement(order):
+    """
+      Sends an order acknowledgment to the customer.
+      """
+    email = EmailNotification.objects.create(
+        recipient=order.customer_email,
+        subject=f"Order Created - #{order.id}",
+        message=f"Dear {order.customer_name},\n\n"
+                f"Thank you for your order!\n"
+                f"Order ID: #{order.id}\n"
+                f"Total Price: ${order.total_price}\n\n"
+                f"Thank you for your purchase. We are currently processing your order.\n\n"
+                f"Best regards,\nWebshop Team",
+    )
+
+    try:
+        send_mail(
+            subject=email.subject,
+            message=email.message,
+            from_email="no-reply@webshop.com",
+            recipient_list=[email.recipient],
+            fail_silently=False,
+        )
+        email.status = "SENT"
+        print(f"Order confirmation email sent to {order.customer_email}.")
+    except Exception as e:
+        print(f"Error sending order confirmation notification email: {e}")
+        email.status = "FAILED"
+    email.save()
+
+
 def send_order_confirmation(order):
     """
     Sends an order confirmation to the customer.
@@ -110,6 +142,13 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def perform_create(self, serializer):
+        """
+        Send email notifications when order is created.
+        """
+        order = serializer.save()
+        send_order_acknowledgement(order)
+
     def perform_update(self, serializer):
         """
         Send email notifications when status to SHIPPED changes.
@@ -134,7 +173,6 @@ class InventoryViewSet(viewsets.ModelViewSet):
             send_low_stock_email(inventory.product.name, inventory.quantity)
 
 class EmailNotificationViewSet(viewsets.ModelViewSet):
-
     queryset = EmailNotification.objects.all()
     serializer_class = EmailNotificationSerializer
 
