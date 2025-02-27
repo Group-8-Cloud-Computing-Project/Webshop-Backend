@@ -29,7 +29,7 @@ def send_order_acknowledgement(order):
                 f"Thank you for your order!\n"
                 f"Order ID: #{order.id}\n"
                 f"Total Price: ${order.total_price}\n\n"
-                f"Thank you for your purchase. We are currently processing your order.\n\n"
+                f"We are currently processing your order.\n\n"
                 f"Best regards,\nWebshop Team",
     )
 
