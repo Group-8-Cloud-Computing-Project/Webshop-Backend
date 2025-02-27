@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "webshop",
     'corsheaders',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -138,7 +139,15 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://kind-mushroom-0a3e7be1e.4.azurestaticapps.net",
-]
+CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_FRONTEND', '')]
+
+# Azure storage settings
+AZURE_ACCOUNT_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME', ''),
+AZURE_ACCOUNT_KEY = os.environ.get('AZURE_STORAGE_ACCOUNT_KEY', ''),
+AZURE_CONTAINER = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME', ''),
+
+# Use Azure Blob Storage for uploaded media
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
+# This will be the base URL for media files
+MEDIA_URL = f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/"

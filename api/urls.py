@@ -34,5 +34,4 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('payments/webhook/', MockPaymentWebhookView.as_view(), name='payment-webhook'),
     path('', include(router.urls)),
-]
-
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
