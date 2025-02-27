@@ -154,6 +154,9 @@ STORAGES = {
             'expiration_secs': 500,
         },
     },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    }
 }
 
 # This will be the base URL for media files
