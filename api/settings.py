@@ -147,7 +147,7 @@ AZURE_ACCOUNT_KEY = os.environ.get('AZURE_STORAGE_ACCOUNT_KEY', '')
 AZURE_CONTAINER = os.environ.get('AZURE_STORAGE_CONTAINER_NAME', '')
 
 # Use Azure Blob Storage for uploaded media
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+DEFAULT_FILE_STORAGE = 'api.azure_storage.AzureStorage'
 
 # This will be the base URL for media files
 MEDIA_URL = f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/"
