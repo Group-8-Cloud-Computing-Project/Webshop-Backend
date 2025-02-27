@@ -144,7 +144,7 @@ CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_FRONTEND', '')]
 # Azure storage settings
 AZURE_ACCOUNT_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME', ''),
 AZURE_ACCOUNT_KEY = os.environ.get('AZURE_STORAGE_ACCOUNT_KEY', ''),
-AZURE_CONTAINER = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME', ''),
+AZURE_CONTAINER = os.environ.get('AZURE_STORAGE_CONTAINER_NAME', ''),
 
 # Use Azure Blob Storage for uploaded media
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
