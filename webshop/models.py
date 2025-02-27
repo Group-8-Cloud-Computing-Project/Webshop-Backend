@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 class Product(models.Model):
@@ -10,16 +11,14 @@ class Product(models.Model):
     image = models.ImageField(upload_to='static/images/products/', blank=True, null=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
 
-
-def __str__(self):
-    return self.name
+    def __str__(self):
+        return self.name
 
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -31,7 +30,7 @@ class Order(models.Model):
 
     customer_name = models.CharField(max_length=100)
     customer_email = models.EmailField()
-    products = models.JSONField()
+    products = models.JSONField(default=list)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,9 +44,8 @@ class Inventory(models.Model):
     """
     Model to represent inventory items.
     """
-    product_name = models.CharField(max_length=255)
-    product_description = models.TextField(blank=True, null=True)
-    quantity = models.PositiveIntegerField(default=0)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="inventory")
+    quantity = models.PositiveIntegerField(default=10)
     low_stock_threshold = models.PositiveIntegerField(default=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -62,7 +60,7 @@ class Inventory(models.Model):
         """
         String representation for the model.
         """
-        return f"{self.product_name} - Quantity: {self.quantity}"
+        return f"{self.product.name} - Quantity: {self.quantity}"
 
 
 class EmailNotification(models.Model):
@@ -85,3 +83,26 @@ class EmailNotification(models.Model):
 
     def __str__(self):
         return f"Email to {self.recipient} - {self.status} at {self.sent_at}"
+
+class MockPayment(models.Model):
+
+    PAYMENT_PROVIDERS = [
+        ("stripe", "Stripe"),
+        ("paypal", "PayPal"),
+    ]
+
+    PAYMENT_STATUS = [
+        ("PENDING", "Pending"),
+        ("COMPLETED", "Completed"),
+        ("FAILED", "Failed"),
+    ]
+    payment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="payments")
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=10, default="usd")
+    provider = models.CharField(max_length=10, choices=PAYMENT_PROVIDERS, default="stripe")
+    status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default="PENDING")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.payment_id} - {self.status}"
