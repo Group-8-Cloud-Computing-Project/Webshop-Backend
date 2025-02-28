@@ -12,7 +12,10 @@ SECRET_KEY = os.getenv('PRODUCTION_KEY', "django-insecure-5$=@vnpq1^!w@8w(v$h%la
 
 DEBUG = False
 
-ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST', ['127.0.0.1', 'localhost'])]
+if DEBUG:
+    ALLOWED_HOSTS =  ['127.0.0.1', 'localhost']
+else:
+    ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST', '')]
 
 # Application definition
 

@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+import os
+
 from .serializers import ProductSerializer, CategorySerializer
 from .models import Product, Category
 from django.db import transaction
@@ -37,14 +38,14 @@ def send_order_acknowledgement(order):
         send_mail(
             subject=email.subject,
             message=email.message,
-            from_email="no-reply@webshop.com",
+            from_email=os.getenv("DEFAULT_FROM_EMAIL",""),
             recipient_list=[email.recipient],
             fail_silently=False,
         )
         email.status = "SENT"
-        print(f"Order confirmation email sent to {order.customer_email}.")
+        print(f"Order acknowledgement email sent to {order.customer_email}.")
     except Exception as e:
-        print(f"Error sending order confirmation notification email: {e}")
+        print(f"Error sending order acknowledgement notification email: {e}")
         email.status = "FAILED"
     email.save()
 
